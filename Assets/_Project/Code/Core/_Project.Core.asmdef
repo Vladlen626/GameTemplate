@@ -1,0 +1,8 @@
+{
+  "name": "_Project.Core",
+  "rootNamespace": "ProjectTemplate.Core",
+  "references": [
+    "PlatformCore.Core"
+  ]
+}
+

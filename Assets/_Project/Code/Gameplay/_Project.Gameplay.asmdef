@@ -1,0 +1,11 @@
+{
+  "name": "_Project.Gameplay",
+  "rootNamespace": "ProjectTemplate.Gameplay",
+  "references": [
+    "_Project.Core",
+    "_Project.Infrastructure",
+    "PlatformCore.Core",
+    "PlatformCore.Infrastructure"
+  ]
+}
+
