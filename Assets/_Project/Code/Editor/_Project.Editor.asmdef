@@ -1,6 +1,6 @@
 {
   "name": "_Project.Editor",
-  "rootNamespace": "ProjectTemplate.Editor",
+  "rootNamespace": "Project.Editor",
   "references": [
     "_Project.Core",
     "_Project.Infrastructure",
@@ -12,4 +12,3 @@
     "Editor"
   ]
 }
-

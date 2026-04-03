@@ -1,9 +1,9 @@
 using PlatformCore.Infrastructure;
 using PlatformCore.Services;
 
-namespace ProjectTemplate.Infrastructure
+namespace Project.Infrastructure
 {
-	public static class TemplateStartup
+	public static class Startup
 	{
 		public static void RegisterServices(ServiceLocator serviceLocator, PersistentSceneContext persistentSceneContext)
 		{
@@ -12,4 +12,3 @@ namespace ProjectTemplate.Infrastructure
 		}
 	}
 }
-
