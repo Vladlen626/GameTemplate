@@ -684,7 +684,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a6bf075a785a1644a718921c1906b1b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectTemplate.Bootstrap.TemplateBootstrap
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Bootstrap.Bootstrap
 --- !u!114 &928795133
 MonoBehaviour:
   m_ObjectHideFlags: 0
