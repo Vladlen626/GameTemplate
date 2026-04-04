@@ -1,11 +1,10 @@
 # Upgrade Checklist
 
-- [ ] Save and commit current project state.
-- [ ] Update `com.len.platformcore` to target revision.
+- [ ] Commit current project state.
+- [ ] Update `com.len.platformcore` package reference.
 - [ ] Reopen Unity and wait for package reimport.
-- [ ] Run validation from `Tools/Len/PlatformCore/Installer`.
-- [ ] Recheck FMOD integration after package update.
-- [ ] Recheck PrimeTween package version and compile state.
-- [ ] Build solution and verify no assembly errors.
-- [ ] Smoke-test bootstrap scene startup.
-
+- [ ] Run `Len/Installer -> Validate Setup`.
+- [ ] Re-check FMOD integration if used.
+- [ ] Re-run `Len/Resources/Generate ResourcePaths`.
+- [ ] Re-run `Len/Audio/Generate SoundNames` if FMOD events changed.
+- [ ] Build solution and smoke-test startup from `Persistent`.

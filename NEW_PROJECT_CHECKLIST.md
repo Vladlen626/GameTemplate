@@ -1,11 +1,9 @@
 # New Project Checklist
 
-- [ ] Confirm Unity editor version for the team.
-- [ ] Confirm `com.len.platformcore` dependency is resolved.
-- [ ] Confirm `com.cysharp.unitask` dependency is resolved.
-- [ ] Confirm `com.kyrylokuzyk.primetween` dependency is resolved.
-- [ ] Create bootstrap scene with `TemplateBootstrap` component.
-- [ ] Assign required references in `PersistentSceneContext`.
-- [ ] Keep gameplay logic outside bootstrap/infrastructure scaffold.
-- [ ] Add first game-specific model/controller in `_Project/Code/Gameplay`.
-
+- [ ] Confirm Unity editor version for team.
+- [ ] Confirm package path for `com.len.platformcore` is valid.
+- [ ] Confirm dependencies resolve (`UniTask`, `PrimeTween`, Cinemachine, Input System, TMP).
+- [ ] Create bootstrap scene with `Project.Bootstrap.Bootstrap`.
+- [ ] Add and configure `PersistentSceneContext` canvas references.
+- [ ] Keep game logic under `Assets/_Project/Code/Gameplay`.
+- [ ] Add first game-specific model/controller without changing platform foundation flow.

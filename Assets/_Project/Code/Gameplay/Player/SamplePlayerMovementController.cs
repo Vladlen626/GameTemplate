@@ -8,14 +8,18 @@ namespace Project.Gameplay.Player
 {
 	public sealed class SamplePlayerMovementController : IBaseController, IActivatable, IDeactivatable, IUpdatable
 	{
+		private const float GroundedStickVelocity = -2f;
+
 		private readonly SamplePlayerView _playerView;
 		private readonly CharacterController _characterController;
 		private readonly IInputService _inputService;
 		private readonly ICursorService _cursorService;
 
-		private Vector3 _velocity;
+		private float _verticalVelocity;
 		private float _yaw;
 		private float _pitch;
+		private bool _isGrounded;
+
 		private Vector3 _cameraRootBaseLocalPosition;
 		private float _headBobPhase;
 		private float _headBobOffsetY;
@@ -38,32 +42,31 @@ namespace Project.Gameplay.Player
 				return;
 			}
 
-			if (_playerView.CameraRoot)
-			{
-				_cameraRootBaseLocalPosition = _playerView.CameraRoot.localPosition;
-			}
-
+			_verticalVelocity = GroundedStickVelocity;
+			_isGrounded = _characterController.isGrounded;
 			_yaw = _playerView.transform.eulerAngles.y;
+
 			if (_playerView.Head)
 			{
 				_pitch = Mathf.DeltaAngle(0f, _playerView.Head.localEulerAngles.x);
+			}
+
+			if (_playerView.CameraRoot)
+			{
+				_cameraRootBaseLocalPosition = _playerView.CameraRoot.localPosition;
 			}
 		}
 
 		public void Deactivate()
 		{
-			_velocity = Vector3.zero;
+			_verticalVelocity = 0f;
+			_isGrounded = false;
 			ResetHeadBob();
 		}
 
 		public void OnUpdate(float deltaTime)
 		{
-			if (!_playerView || !_characterController)
-			{
-				return;
-			}
-
-			if (!_playerView.gameObject.activeInHierarchy)
+			if (!_playerView || !_characterController || !_playerView.gameObject.activeInHierarchy)
 			{
 				return;
 			}
@@ -73,7 +76,7 @@ namespace Project.Gameplay.Player
 			var lookInput = hasControl ? _inputService.Look : Vector2.zero;
 
 			UpdateLook(lookInput);
-			UpdateMovement(moveInput, hasControl, deltaTime);
+			UpdateMovement(hasControl, moveInput, deltaTime);
 			UpdateHeadBob(moveInput, hasControl, deltaTime);
 		}
 
@@ -92,27 +95,40 @@ namespace Project.Gameplay.Player
 			_playerView.Head.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
 		}
 
-		private void UpdateMovement(Vector2 moveInput, bool hasControl, float deltaTime)
+		private void UpdateMovement(bool hasControl, Vector2 moveInput, float deltaTime)
 		{
-			var move =
+			_isGrounded = _characterController.isGrounded;
+
+			if (_isGrounded && _verticalVelocity < 0f)
+			{
+				_verticalVelocity = GroundedStickVelocity;
+			}
+
+			if (hasControl &&
+			    _playerView.EnableJump &&
+			    _inputService.IsJumpPressedThisFrame &&
+			    _isGrounded)
+			{
+				_verticalVelocity = Mathf.Sqrt(_playerView.JumpHeight * -2f * _playerView.Gravity);
+				_isGrounded = false;
+			}
+
+			_verticalVelocity += _playerView.Gravity * deltaTime;
+
+			var moveDirection =
 				_playerView.transform.right * moveInput.x +
 				_playerView.transform.forward * moveInput.y;
 
-			_characterController.Move(move * (_playerView.MoveSpeed * deltaTime));
+			var velocity = moveDirection * _playerView.MoveSpeed;
+			velocity.y = _verticalVelocity;
 
-			if (_characterController.isGrounded && _velocity.y < 0f)
+			_characterController.Move(velocity * deltaTime);
+
+			_isGrounded = _characterController.isGrounded;
+			if (_isGrounded && _verticalVelocity < 0f)
 			{
-				_velocity.y = -2f;
+				_verticalVelocity = GroundedStickVelocity;
 			}
-
-			if (hasControl && _playerView.EnableJump && _characterController.isGrounded &&
-			    _inputService.IsJumpPressedThisFrame)
-			{
-				_velocity.y = Mathf.Sqrt(_playerView.JumpHeight * -2f * _playerView.Gravity);
-			}
-
-			_velocity.y += _playerView.Gravity * deltaTime;
-			_characterController.Move(_velocity * deltaTime);
 		}
 
 		private void UpdateHeadBob(Vector2 moveInput, bool hasControl, float deltaTime)
@@ -122,7 +138,7 @@ namespace Project.Gameplay.Player
 				return;
 			}
 
-			var isMoving = hasControl && _characterController.isGrounded && moveInput.sqrMagnitude > 0.01f;
+			var isMoving = hasControl && _isGrounded && moveInput.sqrMagnitude > 0.01f;
 			var targetOffsetY = 0f;
 
 			if (isMoving)

@@ -1,23 +1,35 @@
 # GameTemplate
 
-Thin Unity starter project for `com.len.platformcore`.
+Thin starter project on top of `com.len.platformcore`.
 
-## Scope
+## Goal
 
-- No gameplay systems.
-- No scene content setup.
-- No runtime prefab generation.
-- Minimal code scaffold for future bootstrap flow.
+- Provide minimal bootstrap flow.
+- Provide a working sample scene startup path.
+- Keep game-specific systems in `_Project`.
 
-## Package baseline
+## Package Baseline
 
-- `com.len.platformcore`
+- `com.len.platformcore` (local package)
 - `com.cysharp.unitask`
 - `com.kyrylokuzyk.primetween`
 
-## Code entry points
+## Runtime Entry Points
 
-- `Assets/_Project/Code/Bootstrap/TemplateBootstrap.cs`
-- `Assets/_Project/Code/Bootstrap/TemplateGameRoot.cs`
-- `Assets/_Project/Code/Infrastructure/TemplateStartup.cs`
+- `Assets/_Project/Code/Bootstrap/Bootstrap.cs`
+- `Assets/_Project/Code/Bootstrap/GameRoot.cs`
+- `Assets/_Project/Code/Infrastructure/Startup.cs`
 
+## Scene Entry Points
+
+- `Assets/_Project/Scenes/Persistent.unity` (bootstrap scene)
+- `Assets/_Project/Scenes/SampleScene.unity` (sample gameplay scene)
+
+## First Run
+
+1. Open `Persistent.unity`.
+2. Ensure Build Settings has `Persistent` and `SampleScene` enabled.
+3. In Unity menu run `Len/Installer -> Validate Setup`.
+4. Optionally run:
+   - `Len/Resources/Generate ResourcePaths`
+   - `Len/Audio/Generate SoundNames` (if FMOD is installed)

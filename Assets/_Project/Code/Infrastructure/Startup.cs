@@ -1,11 +1,13 @@
 using PlatformCore.Infrastructure;
+using PlatformCore.Infrastructure.AsyncAwaiter;
+using PlatformCore.Infrastructure.Notifications;
+using PlatformCore.Infrastructure.Scene;
+using PlatformCore.Infrastructure.Settings;
+using PlatformCore.Infrastructure.UI;
 using PlatformCore.Services;
-using PlatformCore.Services.AsyncAwaiter;
 using PlatformCore.Services.Audio;
 using PlatformCore.Services.Factory;
 using PlatformCore.Services.Input;
-using PlatformCore.Services.Settings;
-using PlatformCore.Services.UI;
 
 namespace Project.Infrastructure
 {
@@ -22,8 +24,7 @@ namespace Project.Infrastructure
 			var objectFactory = new ObjectFactory(resourceService, logger);
 			serviceLocator.Register<IObjectFactory, ObjectFactory>(objectFactory);
 
-			var sceneService = new SceneService(logger, persistentSceneContext);
-			serviceLocator.Register<ISceneService, SceneService>(sceneService);
+			serviceLocator.RegisterSceneManagementFoundation(persistentSceneContext, logger);
 
 			var cameraService = new CameraService(objectFactory);
 			serviceLocator.Register<ICameraShakeService, CameraService>(cameraService);
@@ -32,20 +33,16 @@ namespace Project.Infrastructure
 			var audioService = new AudioBaseService(logger);
 			serviceLocator.Register<IAudioService, AudioBaseService>(audioService);
 
-			var uiService = new UIBaseService(logger, resourceService, persistentSceneContext.UICanvasEntries);
-			serviceLocator.Register<IUIService, UIBaseService>(uiService);
-
-			var cursorService = new CursorService(uiService, logger);
-			serviceLocator.Register<ICursorService, CursorService>(cursorService);
+			var uiService = serviceLocator.RegisterUIFoundation(persistentSceneContext, logger, resourceService);
+			serviceLocator.RegisterGlobalNotificationsFoundation(uiService, objectFactory, audioService);
 
 			var inputService = new InputBaseService();
 			serviceLocator.Register<IInputService, InputBaseService>(inputService);
 
-			var asyncAwaiterService = new AsyncAwaiterService();
-			serviceLocator.Register<IAsyncAwaiterService, AsyncAwaiterService>(asyncAwaiterService);
-
-			var settingsService = new SettingsService(new PlayerPrefsSettingsPersistence());
-			serviceLocator.Register<ISettingsService, SettingsService>(settingsService);
+			serviceLocator.RegisterAsyncAwaiterFoundation();
+			serviceLocator.RegisterSettingsFoundation();
+			serviceLocator.RegisterAudioSettingsApplier(audioService);
+			serviceLocator.RegisterCameraSettingsApplier(cameraService);
 		}
 	}
 }

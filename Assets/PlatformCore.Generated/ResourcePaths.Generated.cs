@@ -7,8 +7,6 @@ namespace Project.Infrastructure
 	{
 		public const string Characters_Player = "Characters/Player";
 		public const string CinemachineCamera = "CinemachineCamera";
-		public const string UI_ElementBackground = "UI/ElementBackground";
-		public const string UI_UICursorView = "UI/UICursorView";
 		public const string UI_UISettings = "UI/UISettings";
 	}
 }

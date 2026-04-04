@@ -6,9 +6,10 @@
   - `Assets/_Project/Code/Bootstrap/GameRoot.cs`
   - `Assets/_Project/Code/Infrastructure/Startup.cs`
 - Then check PlatformCore architecture sources of truth:
+  - `C:/Users/vladl/projects/PlatformCore/README.md`
+  - `C:/Users/vladl/projects/PlatformCore/Documentation~/SETUP.md`
   - `C:/Users/vladl/projects/PlatformCore/Documentation~/ARCHITECTURE.md`
-  - `C:/Users/vladl/projects/PlatformCore/Documentation~/PlatformCore_2_0_Implementation_Plan.md`
-  - `C:/Users/vladl/projects/PlatformCore/Documentation~/PlatformCore_2_0_Module_Split_Spec.md`
+  - `C:/Users/vladl/projects/PlatformCore/Documentation~/DOCS_STATUS.md`
 - Validate behavior in runtime code (not only docs):
   - `C:/Users/vladl/projects/PlatformCore/Runtime/Infrastructure/BaseBootstrap.cs`
   - `C:/Users/vladl/projects/PlatformCore/Runtime/Infrastructure/BaseGameRoot.cs`
