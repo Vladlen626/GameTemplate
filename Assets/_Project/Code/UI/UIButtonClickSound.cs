@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class UIButtonClickSound : MonoBehaviour, IPointerClickHandler, ISubmitHandler
 {
-	[SerializeField] private string clickSoundEvent = "event:/JumpSample";
+	[SerializeField] private string clickSoundEvent = SoundNames.JumpSample;
 
 	private IAudioService audioService;
 	private Button button;

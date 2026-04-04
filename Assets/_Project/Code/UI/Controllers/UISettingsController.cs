@@ -1,22 +1,25 @@
-using PlatformCore.Core;
-using PlatformCore.Core.Lifecycle;
 using PlatformCore.Services.Audio;
+using PlatformCore.Services.Input;
 using PlatformCore.Services.UI;
-using UnityEngine;
-using UnityEngine.InputSystem;
 
-public sealed class UISettingsController : BaseContextController<UISettings>, IUpdatable
+public sealed class UISettingsController : BaseContextController<UISettings>
 {
 	private readonly IAudioService _audioService;
 	private readonly ICursorService _cursorService;
+	private readonly IInputService _inputService;
 
 	private bool _cursorUnlockedBySettings;
 
-	public UISettingsController(IUIService uiService, IAudioService audioService, ICursorService cursorService)
+	public UISettingsController(
+		IUIService uiService,
+		IAudioService audioService,
+		ICursorService cursorService,
+		IInputService inputService)
 		: base(uiService)
 	{
 		_audioService = audioService;
 		_cursorService = cursorService;
+		_inputService = inputService;
 	}
 
 	protected override void OnActivate()
@@ -29,10 +32,12 @@ public sealed class UISettingsController : BaseContextController<UISettings>, IU
 		_context.OnSfxChanged += OnSfxChangedHandler;
 		_context.OnCloseClicked += OnCloseClickedHandler;
 		_context.OnMainMenuClicked += OnMainMenuClickedHandler;
+		_inputService.OnPausePressed += OnPausePressedHandler;
 	}
 
 	protected override void OnDeactivate()
 	{
+		_inputService.OnPausePressed -= OnPausePressedHandler;
 		_context.OnMainMenuClicked -= OnMainMenuClickedHandler;
 		_context.OnCloseClicked -= OnCloseClickedHandler;
 		_context.OnSfxChanged -= OnSfxChangedHandler;
@@ -40,21 +45,6 @@ public sealed class UISettingsController : BaseContextController<UISettings>, IU
 		_context.OnMasterChanged -= OnMasterChangedHandler;
 
 		base.OnDeactivate();
-	}
-
-	public void OnUpdate(float deltaTime)
-	{
-		if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
-		{
-			if (_context.IsShown())
-			{
-				HideContext();
-			}
-			else
-			{
-				ShowContext();
-			}
-		}
 	}
 
 	private void ShowContext()
@@ -105,5 +95,17 @@ public sealed class UISettingsController : BaseContextController<UISettings>, IU
 	private void OnMainMenuClickedHandler()
 	{
 		HideContext();
+	}
+
+	private void OnPausePressedHandler()
+	{
+		if (_context.IsShown())
+		{
+			HideContext();
+		}
+		else
+		{
+			ShowContext();
+		}
 	}
 }

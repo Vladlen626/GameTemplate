@@ -3,7 +3,10 @@ using PlatformCore.Core;
 using PlatformCore.Infrastructure;
 using PlatformCore.Services;
 using PlatformCore.Services.Audio;
+using PlatformCore.Services.Factory;
+using PlatformCore.Services.Input;
 using PlatformCore.Services.UI;
+using Project.Gameplay.Player;
 using Project.Infrastructure;
 
 namespace Project.Bootstrap
@@ -18,13 +21,16 @@ namespace Project.Bootstrap
 		protected override async UniTask LaunchGameAsync(PersistentSceneContext persistentSceneContext)
 		{
 			var sceneService = _serviceLocator.Get<ISceneService>();
+			var objectFactory = _serviceLocator.Get<IObjectFactory>();
 			var uiService = _serviceLocator.Get<IUIService>();
 			var audioService = _serviceLocator.Get<IAudioService>();
 			var cursorService = _serviceLocator.Get<ICursorService>();
+			var inputService = _serviceLocator.Get<IInputService>();
+			var cameraService = _serviceLocator.Get<ICameraService>();
 
 			var baseControllers = new IBaseController[]
 			{
-				new UISettingsController(uiService, audioService, cursorService),
+				new UISettingsController(uiService, audioService, cursorService, inputService),
 			};
 
 			await _lifecycle.RegisterControllersGroupAsync(baseControllers);
@@ -36,6 +42,24 @@ namespace Project.Bootstrap
 			else
 			{
 				await sceneService.LoadAndSetActiveSceneAsync(SceneNames.SampleScene, ApplicationCancellationToken);
+			}
+
+			var playerView = await SamplePlayerFactory.SpawnAsync(objectFactory);
+			if (playerView)
+			{
+				if (playerView.CameraRoot)
+				{
+					cameraService.AttachPrimaryCameraTo(playerView.CameraRoot);
+				}
+
+				cursorService.LockCursor();
+
+				var playerControllers = new IBaseController[]
+				{
+					new SamplePlayerMovementController(playerView, inputService, cursorService),
+				};
+
+				await _lifecycle.RegisterControllersGroupAsync(playerControllers);
 			}
 		}
 	}

@@ -3,6 +3,7 @@ using PlatformCore.Services;
 using PlatformCore.Services.AsyncAwaiter;
 using PlatformCore.Services.Audio;
 using PlatformCore.Services.Factory;
+using PlatformCore.Services.Input;
 using PlatformCore.Services.Settings;
 using PlatformCore.Services.UI;
 
@@ -24,6 +25,10 @@ namespace Project.Infrastructure
 			var sceneService = new SceneService(logger, persistentSceneContext);
 			serviceLocator.Register<ISceneService, SceneService>(sceneService);
 
+			var cameraService = new CameraService(objectFactory);
+			serviceLocator.Register<ICameraShakeService, CameraService>(cameraService);
+			serviceLocator.Register<ICameraService, CameraService>(cameraService);
+
 			var audioService = new AudioBaseService(logger);
 			serviceLocator.Register<IAudioService, AudioBaseService>(audioService);
 
@@ -32,6 +37,9 @@ namespace Project.Infrastructure
 
 			var cursorService = new CursorService(uiService, logger);
 			serviceLocator.Register<ICursorService, CursorService>(cursorService);
+
+			var inputService = new InputBaseService();
+			serviceLocator.Register<IInputService, InputBaseService>(inputService);
 
 			var asyncAwaiterService = new AsyncAwaiterService();
 			serviceLocator.Register<IAsyncAwaiterService, AsyncAwaiterService>(asyncAwaiterService);
