@@ -5,6 +5,8 @@
   - `Assets/_Project/Code/Bootstrap/Bootstrap.cs`
   - `Assets/_Project/Code/Bootstrap/GameRoot.cs`
   - `Assets/_Project/Code/Infrastructure/Startup.cs`
+  - `Assets/_Project/Code/Infrastructure/GameLaunchSettings*.cs`
+  - `Assets/_Project/Code/Infrastructure/MultiplayerRuntimeBridge.cs`
 - Then check PlatformCore architecture sources of truth:
   - `C:/Users/vladl/projects/PlatformCore/README.md`
   - `C:/Users/vladl/projects/PlatformCore/Documentation~/SETUP.md`

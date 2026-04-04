@@ -20,6 +20,7 @@ namespace Project.Bootstrap
 
 		protected override async UniTask LaunchGameAsync(PersistentSceneContext persistentSceneContext)
 		{
+			var launchSettings = GameLaunchSettingsResolver.Resolve();
 			var sceneService = _serviceLocator.Get<ISceneService>();
 			var objectFactory = _serviceLocator.Get<IObjectFactory>();
 			var uiService = _serviceLocator.Get<IUIService>();
@@ -27,6 +28,7 @@ namespace Project.Bootstrap
 			var cursorService = _serviceLocator.Get<ICursorService>();
 			var inputService = _serviceLocator.Get<IInputService>();
 			var cameraService = _serviceLocator.Get<ICameraService>();
+			var loggerService = _serviceLocator.Get<ILoggerService>();
 
 			var baseControllers = new IBaseController[]
 			{
@@ -44,23 +46,40 @@ namespace Project.Bootstrap
 				await sceneService.LoadAndSetActiveSceneAsync(SceneNames.SampleScene, ApplicationCancellationToken);
 			}
 
-			var playerView = await SamplePlayerFactory.SpawnAsync(objectFactory);
-			if (playerView)
+			if (launchSettings.IsMultiplayer)
 			{
-				if (playerView.CameraRoot)
+				var started = MultiplayerRuntimeBridge.TryStart(
+					_serviceLocator,
+					_lifecycle,
+					launchSettings,
+					loggerService);
+				if (!started)
 				{
-					cameraService.AttachPrimaryCameraTo(playerView.CameraRoot);
+					loggerService?.LogError("[GameRoot] Multiplayer launch requested but runtime did not start.");
 				}
 
-				cursorService.LockCursor();
-
-				var playerControllers = new IBaseController[]
-				{
-					new SamplePlayerMovementController(playerView, inputService, cursorService),
-				};
-
-				await _lifecycle.RegisterControllersGroupAsync(playerControllers);
+				return;
 			}
+
+			var playerView = await SamplePlayerFactory.SpawnAsync(objectFactory);
+			if (!playerView)
+			{
+				return;
+			}
+
+			if (playerView.CameraRoot)
+			{
+				cameraService.AttachPrimaryCameraTo(playerView.CameraRoot);
+			}
+
+			cursorService.LockCursor();
+
+			var playerControllers = new IBaseController[]
+			{
+				new SamplePlayerMovementController(playerView, inputService, cursorService),
+			};
+
+			await _lifecycle.RegisterControllersGroupAsync(playerControllers);
 		}
 	}
 }

@@ -7,3 +7,4 @@
 - [ ] Add and configure `PersistentSceneContext` canvas references.
 - [ ] Keep game logic under `Assets/_Project/Code/Gameplay`.
 - [ ] Add first game-specific model/controller without changing platform foundation flow.
+- [ ] If multiplayer is needed: install FishNet and complete `MULTIPLAYER_QUICKSTART.md` scene/prefab setup.

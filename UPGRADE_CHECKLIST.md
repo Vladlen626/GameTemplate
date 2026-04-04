@@ -8,3 +8,4 @@
 - [ ] Re-run `Len/Resources/Generate ResourcePaths`.
 - [ ] Re-run `Len/Audio/Generate SoundNames` if FMOD events changed.
 - [ ] Build solution and smoke-test startup from `Persistent`.
+- [ ] If multiplayer path is used: verify FishNet setup and rerun `MULTIPLAYER_QUICKSTART.md` smoke.

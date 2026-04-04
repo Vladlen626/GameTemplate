@@ -33,3 +33,14 @@ Thin starter project on top of `com.len.platformcore`.
 4. Optionally run:
    - `Len/Resources/Generate ResourcePaths`
    - `Len/Audio/Generate SoundNames` (if FMOD is installed)
+
+## Start Modes
+
+GameTemplate now supports launch-mode arguments:
+- default (no args): singleplayer path
+- `-host`: multiplayer host path
+- `-client`: multiplayer client path
+- optional with client/host: `-address <ip> -port <port>`
+
+See [MULTIPLAYER_QUICKSTART.md](./MULTIPLAYER_QUICKSTART.md) for required FishNet scene/prefab setup.
+See [START_NEW_GAME.md](./START_NEW_GAME.md) for concise start checklist.
