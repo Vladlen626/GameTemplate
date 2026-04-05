@@ -7,7 +7,8 @@
     "PlatformCore.Core",
     "PlatformCore.Infrastructure",
     "PlatformCore.Infrastructure.FishNet",
-    "FishNet.Runtime"
+    "FishNet.Runtime",
+    "UniTask"
   ],
   "defineConstraints": [
     "LEN_PROJECT_HAS_FISHNET"

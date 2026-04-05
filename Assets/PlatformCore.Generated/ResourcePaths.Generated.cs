@@ -5,6 +5,7 @@ namespace Project.Infrastructure
 {
 	public static class ProjectResourcePaths
 	{
+		public const string Characters_NetworkPlayer = "Characters/NetworkPlayer";
 		public const string Characters_Player = "Characters/Player";
 		public const string CinemachineCamera = "CinemachineCamera";
 		public const string UI_UISettings = "UI/UISettings";

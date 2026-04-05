@@ -12,7 +12,10 @@ namespace Project.Infrastructure
 		public const string DefaultAddress = "127.0.0.1";
 		public const ushort DefaultPort = 7770;
 
-		public GameLaunchSettings(GameLaunchMode mode, string address, ushort port)
+		public GameLaunchSettings(
+			GameLaunchMode mode,
+			string address,
+			ushort port)
 		{
 			Mode = mode;
 			Address = string.IsNullOrWhiteSpace(address) ? DefaultAddress : address;

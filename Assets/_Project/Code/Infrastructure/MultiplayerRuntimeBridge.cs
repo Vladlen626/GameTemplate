@@ -7,6 +7,7 @@ namespace Project.Infrastructure
 {
 	public static class MultiplayerRuntimeBridge
 	{
+		private const string FishNetManagerTypeName = "FishNet.Managing.NetworkManager, FishNet.Runtime";
 		private const string EntryPointTypeName = "Project.Network.MultiplayerRuntimeEntryPoint, _Project.Network";
 		private const string StartMethodName = "Start";
 
@@ -21,12 +22,20 @@ namespace Project.Infrastructure
 				return false;
 			}
 
+			if (Type.GetType(FishNetManagerTypeName) == null)
+			{
+				loggerService?.LogError(
+					"[Multiplayer] FishNet runtime assembly is unavailable. " +
+					"Install FishNet or reimport package assemblies.");
+				return false;
+			}
+
 			var entryType = Type.GetType(EntryPointTypeName);
 			if (entryType == null)
 			{
 				loggerService?.LogError(
 					"[Multiplayer] Multiplayer mode requested, but _Project.Network entry point is unavailable. " +
-					"Install FishNet and reimport assemblies.");
+					"Enable LEN_PROJECT_HAS_FISHNET and LEN_PLATFORMCORE_HAS_FISHNET define symbols, then recompile.");
 				return false;
 			}
 
@@ -34,6 +43,19 @@ namespace Project.Infrastructure
 			if (startMethod == null)
 			{
 				loggerService?.LogError("[Multiplayer] Multiplayer entry point exists, but Start method is missing.");
+				return false;
+			}
+			if (startMethod.ReturnType != typeof(bool))
+			{
+				loggerService?.LogError("[Multiplayer] Multiplayer Start method must return bool.");
+				return false;
+			}
+			var startParameters = startMethod.GetParameters();
+			if (startParameters.Length != 4)
+			{
+				loggerService?.LogError(
+					"[Multiplayer] Multiplayer Start method has invalid signature. " +
+					"Expected parameters: (ServiceLocator, LifecycleService, GameLaunchSettings, ILoggerService).");
 				return false;
 			}
 
