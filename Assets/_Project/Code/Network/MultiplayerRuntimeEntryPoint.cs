@@ -1,5 +1,4 @@
 using System.Reflection;
-using Cysharp.Threading.Tasks;
 using FishNet;
 using FishNet.Component.Spawning;
 using PlatformCore.Infrastructure;
@@ -49,8 +48,7 @@ namespace Project.Network
 			}
 
 			var sessionController = new NetworkSessionFlowController(networkManager, launchSettings, loggerService);
-			lifecycleService.RegisterAsync(sessionController).Forget(exception =>
-				loggerService?.LogError($"[Multiplayer] Failed to register network session controller: {exception}"));
+			lifecycleService.Register(sessionController);
 
 			loggerService?.Log($"[Multiplayer] Requested mode: {launchSettings.Mode}, address={launchSettings.Address}, port={launchSettings.Port}");
 			return true;

@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using FishNet.Object;
 using PlatformCore.Infrastructure;
 using PlatformCore.Services;
@@ -36,7 +35,7 @@ namespace Project.Network
 				return;
 			}
 
-			RegisterOwnerControllerAsync().Forget();
+			RegisterOwnerController();
 		}
 
 		public override void OnStopClient()
@@ -49,7 +48,7 @@ namespace Project.Network
 			base.OnStopClient();
 		}
 
-		private async UniTaskVoid RegisterOwnerControllerAsync()
+		private void RegisterOwnerController()
 		{
 			if (!_playerView)
 			{
@@ -67,7 +66,7 @@ namespace Project.Network
 			}
 
 			_movementController = new SamplePlayerMovementController(_playerView, inputService, _cursorService);
-			await _lifecycleService.RegisterAsync(_movementController);
+			_lifecycleService.Register(_movementController);
 			_registered = true;
 
 			if (_playerView.CameraRoot && cameraService != null)
